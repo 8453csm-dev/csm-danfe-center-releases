@@ -1,0 +1,16 @@
+{
+  "app": "CSM Assinaturas",
+  "channel": "stable",
+  "version": "1.0.7-final",
+  "published_at": "2026-07-31T14:00:00Z",
+  "notes": "Atualização pelo GitHub integrada, verificação SHA-256 e preservação automática do cadastro central.",
+  "chunks": [
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.part01.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.part02.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.part03.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.part04.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.part05.b64"
+  ],
+  "sha256": "1ca65ca14d50ef9f319a70cd484e734d2fc44a6d05c31b117747a3a0ccd988cf",
+  "format": "base64-zip-chunks"
+}
