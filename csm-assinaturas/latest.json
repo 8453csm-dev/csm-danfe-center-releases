@@ -1,23 +1,23 @@
 {
-    "app":  "CSM Assinaturas",
-    "channel":  "stable",
-    "version":  "1.0.9-final",
-    "published_at":  "2026-07-31T16:18:06Z",
-    "notes":  "Migracao para repositorio proprio do CSM Assinaturas, com preservacao integral dos cadastros e correcao visual do painel administrativo.",
-    "chunks":  [
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part01.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part02.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part03.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part04.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part05.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part06.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part07.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part08.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part09.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part10.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part11.b64",
-                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part12.b64"
-               ],
-    "sha256":  "f6c466592b12496d1d9a84ba01f1856af8d48db8577be4d3f60ac926b72cf362",
-    "format":  "base64-zip-chunks"
+  "app": "CSM Assinaturas",
+  "channel": "stable",
+  "version": "1.0.9-final",
+  "published_at": "2026-07-31T16:18:06Z",
+  "notes": "Migracao para repositorio proprio do CSM Assinaturas, com preservacao integral dos cadastros e correcao visual do painel administrativo. Manifesto republicado com quebra de cache para evitar erro 404 logo apos a migracao.",
+  "chunks": [
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part01.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part02.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part03.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part04.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part05.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part06.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part07.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part08.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part09.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part10.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part11.b64?v=109",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part12.b64?v=109"
+  ],
+  "sha256": "f6c466592b12496d1d9a84ba01f1856af8d48db8577be4d3f60ac926b72cf362",
+  "format": "base64-zip-chunks"
 }
