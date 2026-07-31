@@ -1,0 +1,27 @@
+name: Disparar publicação do CSM Assinaturas
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "csm-assinaturas/publicar-1.0.8.trigger"
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  disparar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Disparar workflow de publicação
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'publicar-csm-assinaturas-1.0.8.yml',
+              ref: 'main'
+            })
