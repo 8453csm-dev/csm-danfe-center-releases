@@ -1,15 +1,25 @@
 {
   "app": "CSM Assinaturas",
   "channel": "stable",
-  "version": "1.0.7-final",
-  "published_at": "2026-07-31T14:00:00Z",
-  "notes": "Atualização pelo GitHub integrada, verificação SHA-256 e preservação automática do cadastro central.",
+  "version": "1.0.8-final",
+  "published_at": "2026-07-31T14:45:00Z",
+  "notes": "Correção visual no cabeçalho do painel administrativo. Remove o bloco branco na faixa roxa e preserva cadastros, imagens, senha e histórico.",
   "chunks": [
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.smallpart01.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.smallpart02.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.smallpart03.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Update_1.0.7-final.smallpart04.b64"
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny01.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny02.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny03.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny04.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny05.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny06.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny07.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny08.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny09.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny10.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny11.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny12.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny13.b64",
+    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny14.b64"
   ],
-  "sha256": "9029877e74748993c608e45a039f7b66a61cf2082d9417878acf22c78369f149",
+  "sha256": "a81e5a01938acab9ef8fe264aedd6d387e04fdf25217659bc3e1a322098ff325",
   "format": "base64-zip-chunks"
 }
