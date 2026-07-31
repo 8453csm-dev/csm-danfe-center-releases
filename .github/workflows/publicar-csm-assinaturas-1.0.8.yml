@@ -1,0 +1,167 @@
+name: Publicar CSM Assinaturas 1.0.8
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publicar-csm-assinaturas-1.0.8.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publicar-correcao:
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Baixar repositório de atualizações
+        uses: actions/checkout@v4
+
+      - name: Gerar e publicar correção visual 1.0.8
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $PSNativeCommandUseErrorActionPreference = $true
+
+          $releaseRoot = Join-Path $env:GITHUB_WORKSPACE "csm-assinaturas"
+          $manifestPath = Join-Path $releaseRoot "latest.json"
+          $manifest = Get-Content -LiteralPath $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
+
+          if ([string]$manifest.version -eq "1.0.8-final") {
+              Write-Host "A versão 1.0.8-final já está publicada."
+              exit 0
+          }
+
+          if ([string]$manifest.version -ne "1.0.7-final") {
+              throw "Versão-base inesperada no manifesto: $($manifest.version)"
+          }
+
+          $workRoot = Join-Path $env:RUNNER_TEMP ("csm-assinaturas-108-" + [Guid]::NewGuid().ToString("N"))
+          $sourceZip = Join-Path $workRoot "fonte-107.zip"
+          $extractRoot = Join-Path $workRoot "fonte"
+          $stageRoot = Join-Path $workRoot "patch"
+          $patchZip = Join-Path $workRoot "CSM_Assinaturas_Patch_1.0.8-final.zip"
+
+          New-Item -ItemType Directory -Path $workRoot, $extractRoot, $stageRoot -Force | Out-Null
+
+          $encoded = New-Object System.Text.StringBuilder
+          foreach ($url in @($manifest.chunks)) {
+              $fileName = Split-Path ([Uri][string]$url).AbsolutePath -Leaf
+              $partPath = Join-Path $releaseRoot $fileName
+              if (-not (Test-Path -LiteralPath $partPath)) {
+                  throw "Parte da versão 1.0.7 não encontrada: $fileName"
+              }
+              [void]$encoded.Append((Get-Content -LiteralPath $partPath -Raw -Encoding UTF8).Trim())
+          }
+
+          [System.IO.File]::WriteAllBytes(
+              $sourceZip,
+              [Convert]::FromBase64String(($encoded.ToString() -replace "\s", ""))
+          )
+
+          $sourceHash = (Get-FileHash -LiteralPath $sourceZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($sourceHash -ne ([string]$manifest.sha256).Trim().ToLowerInvariant()) {
+              throw "A verificação SHA-256 da versão 1.0.7 falhou."
+          }
+
+          Expand-Archive -LiteralPath $sourceZip -DestinationPath $extractRoot -Force
+
+          $scriptFile = Get-ChildItem -LiteralPath $extractRoot -Filter "CSM_Assinaturas.ps1" -File -Recurse | Select-Object -First 1
+          if (-not $scriptFile) {
+              throw "CSM_Assinaturas.ps1 não encontrado no pacote 1.0.7."
+          }
+
+          $appRoot = $scriptFile.Directory.FullName
+          $configPath = Join-Path $appRoot "app_config.json"
+          if (-not (Test-Path -LiteralPath $configPath)) {
+              throw "app_config.json não encontrado no pacote 1.0.7."
+          }
+
+          $code = Get-Content -LiteralPath $scriptFile.FullName -Raw -Encoding UTF8
+          if ($code -notmatch '\$title\.Parent\s*=\s*\$headerPanel') {
+              $needle = '    $headerPanel.SendToBack()'
+              $replacement = "    `$headerPanel.SendToBack()`r`n`r`n    `$title.Parent = `$headerPanel`r`n    `$subtitle.Parent = `$headerPanel"
+
+              if (-not $code.Contains($needle)) {
+                  throw "Ponto do cabeçalho administrativo não localizado."
+              }
+
+              $code = $code.Replace($needle, $replacement)
+          }
+
+          $code = $code.Replace("1.0.7-final", "1.0.8-final")
+          [System.IO.File]::WriteAllText(
+              $scriptFile.FullName,
+              $code,
+              (New-Object System.Text.UTF8Encoding($true))
+          )
+
+          $config = Get-Content -LiteralPath $configPath -Raw -Encoding UTF8 | ConvertFrom-Json
+          $config.versao = "1.0.8-final"
+          [System.IO.File]::WriteAllText(
+              $configPath,
+              ($config | ConvertTo-Json -Depth 10),
+              (New-Object System.Text.UTF8Encoding($false))
+          )
+
+          Copy-Item -LiteralPath $scriptFile.FullName -Destination (Join-Path $stageRoot "CSM_Assinaturas.ps1") -Force
+          Copy-Item -LiteralPath $configPath -Destination (Join-Path $stageRoot "app_config.json") -Force
+
+          $note = @"
+          CSM Assinaturas 1.0.8-final
+
+          Correção visual no painel administrativo: o título e o subtítulo agora pertencem ao painel roxo do cabeçalho, eliminando o bloco branco indevido.
+
+          Cadastros, imagens, senha administrativa e histórico permanecem preservados.
+          "@
+          [System.IO.File]::WriteAllText(
+              (Join-Path $stageRoot "CORRECAO_V1_0_8.txt"),
+              $note.Trim(),
+              (New-Object System.Text.UTF8Encoding($true))
+          )
+
+          Compress-Archive -Path (Join-Path $stageRoot "*") -DestinationPath $patchZip -CompressionLevel Optimal -Force
+
+          $patchHash = (Get-FileHash -LiteralPath $patchZip -Algorithm SHA256).Hash.ToLowerInvariant()
+          $patchBase64 = [Convert]::ToBase64String([System.IO.File]::ReadAllBytes($patchZip))
+          $partCount = 4
+          $partSize = [int][Math]::Ceiling($patchBase64.Length / [double]$partCount)
+
+          Remove-Item -Path (Join-Path $releaseRoot "CSM_Assinaturas_Patch_1.0.8-final.part*.b64") -Force -ErrorAction SilentlyContinue
+
+          $chunkUrls = @()
+          for ($index = 0; $index -lt $partCount; $index++) {
+              $offset = $index * $partSize
+              $length = [Math]::Min($partSize, $patchBase64.Length - $offset)
+              $partName = "CSM_Assinaturas_Patch_1.0.8-final.part{0:D2}.b64" -f ($index + 1)
+              $partPath = Join-Path $releaseRoot $partName
+              $partText = $patchBase64.Substring($offset, $length)
+              [System.IO.File]::WriteAllText($partPath, $partText, (New-Object System.Text.UTF8Encoding($false)))
+              $chunkUrls += "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/$partName"
+          }
+
+          $newManifest = [ordered]@{
+              app = "CSM Assinaturas"
+              channel = "stable"
+              version = "1.0.8-final"
+              published_at = "2026-07-31T14:40:00Z"
+              notes = "Correção visual no cabeçalho do painel administrativo. Remove o bloco branco na faixa roxa e preserva cadastros, imagens, senha e histórico."
+              chunks = $chunkUrls
+              sha256 = $patchHash
+              format = "base64-zip-chunks"
+          }
+
+          [System.IO.File]::WriteAllText(
+              $manifestPath,
+              ($newManifest | ConvertTo-Json -Depth 10),
+              (New-Object System.Text.UTF8Encoding($false))
+          )
+
+          git config user.name "CSM Atualizações"
+          git config user.email "8453csm-dev@users.noreply.github.com"
+          git add csm-assinaturas/latest.json csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.part*.b64
+          git commit -m "Publica CSM Assinaturas 1.0.8-final — correção visual"
+          git push
