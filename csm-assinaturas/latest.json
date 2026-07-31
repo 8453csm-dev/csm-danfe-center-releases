@@ -1,25 +1,23 @@
 {
-  "app": "CSM Assinaturas",
-  "channel": "stable",
-  "version": "1.0.8-final",
-  "published_at": "2026-07-31T14:45:00Z",
-  "notes": "Correção visual no cabeçalho do painel administrativo. Remove o bloco branco na faixa roxa e preserva cadastros, imagens, senha e histórico.",
-  "chunks": [
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny01.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny02.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny03.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny04.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny05.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny06.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny07.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny08.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny09.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny10.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny11.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny12.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny13.b64",
-    "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/csm-assinaturas/CSM_Assinaturas_Patch_1.0.8-final.tiny14.b64"
-  ],
-  "sha256": "a81e5a01938acab9ef8fe264aedd6d387e04fdf25217659bc3e1a322098ff325",
-  "format": "base64-zip-chunks"
+    "app":  "CSM Assinaturas",
+    "channel":  "stable",
+    "version":  "1.0.9-final",
+    "published_at":  "2026-07-31T16:18:06Z",
+    "notes":  "Migracao para repositorio proprio do CSM Assinaturas, com preservacao integral dos cadastros e correcao visual do painel administrativo.",
+    "chunks":  [
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part01.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part02.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part03.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part04.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part05.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part06.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part07.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part08.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part09.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part10.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part11.b64",
+                   "https://raw.githubusercontent.com/8453csm-dev/csm-assinaturas/main/releases/CSM_Assinaturas_Update_1.0.9-final.part12.b64"
+               ],
+    "sha256":  "f6c466592b12496d1d9a84ba01f1856af8d48db8577be4d3f60ac926b72cf362",
+    "format":  "base64-zip-chunks"
 }
