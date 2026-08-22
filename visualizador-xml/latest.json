@@ -1,12 +1,12 @@
 {
   "product": "CSM Visualizador XML",
   "version": "3.0.1",
-  "download_url": "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/visualizador-xml/3.0.1/payload-package.json",
-  "sha256": "30e8427818a1c0aacd9933cd7697d7ec66439859e92f6955c99db6637701f4e6",
+  "download_url": "",
+  "sha256": "",
   "published_at": "2026-08-22T15:20:00Z",
   "notes": [
-    "Canal oficial de atualizações pelo GitHub ativado.",
+    "Versão-base do canal oficial de atualizações pelo GitHub.",
     "Atualizações do CSM Visualizador XML não dependem mais de GitHub Actions.",
-    "Os pacotes são validados por SHA-256 antes da instalação."
+    "A partir da próxima versão, o manifesto apontará para o pacote estático validado por SHA-256."
   ]
 }
