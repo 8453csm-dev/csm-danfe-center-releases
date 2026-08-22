@@ -1,12 +1,12 @@
 {
   "product": "CSM Visualizador XML",
-  "version": "3.0.1",
+  "version": "3.0.2-TESTE",
   "download_url": "",
   "sha256": "",
-  "published_at": "2026-08-22T15:20:00Z",
+  "published_at": "2026-08-22T17:56:00Z",
   "notes": [
-    "Versão-base do canal oficial de atualizações pelo GitHub.",
-    "Atualizações do CSM Visualizador XML não dependem mais de GitHub Actions.",
-    "A partir da próxima versão, o manifesto apontará para o pacote estático validado por SHA-256."
+    "TESTE temporário do canal GitHub.",
+    "Nenhum instalador será executado neste teste.",
+    "Se esta versão aparecer no aplicativo, a consulta ao GitHub e a comparação de versão estão funcionando."
   ]
 }
