@@ -2,12 +2,12 @@
   "product": "CSM Visualizador XML",
   "version": "3.7.9",
   "download_url": "https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/visualizador-xml/3.7.9/package.json",
-  "sha256": "60fd97012f8acb144c8538e0a7da0cb46476bd26889ed875da7765c46770146e",
-  "published_at": "2026-08-23T22:05:00Z",
+  "sha256": "2f9a9d80161ddfedc738882c2133a18247468ad63adfb676418a18d1aff516e2",
+  "published_at": "2026-08-23T22:25:00Z",
   "notes": [
     "Teste oficial do atualizador automático do CSM Visualizador XML.",
+    "Pacote automático corrigido e validado no formato esperado pelo CSM 3.7.8.",
     "Atualização pequena: preserva Consulta DANFE, Meu DANFE e conferência fiscal sem alterações.",
-    "Validação SHA-256, backup e rollback antes da troca da versão.",
-    "Após concluir, o CSM deve reabrir automaticamente já na versão 3.7.9."
+    "Validação SHA-256, backup e rollback antes da troca da versão."
   ]
 }
