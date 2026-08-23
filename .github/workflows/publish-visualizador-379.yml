@@ -89,3 +89,5 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m 'Publicar pacote validado 3.7.9 [skip ci]'
           git push
+
+# trigger: 2026-08-23T22:56Z
