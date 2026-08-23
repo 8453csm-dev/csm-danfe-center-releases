@@ -1,0 +1,91 @@
+name: Publish CSM Visualizador XML 3.7.9
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-visualizador-379.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate validated update package
+        shell: python
+        run: |
+          import base64, hashlib, json, pathlib, zipfile
+          root = pathlib.Path('visualizador-xml/3.7.9')
+          root.mkdir(parents=True, exist_ok=True)
+          script = r'''param(
+            [Parameter(Mandatory=$true)][string]$SourceDir,
+            [Parameter(Mandatory=$true)][string]$InstallDir
+          )
+          $ErrorActionPreference = 'Stop'
+          $exe = Join-Path $InstallDir 'CSM Visualizador XML.exe'
+          $expectedOld = 'cc61da1cdb75358f6a9d82e532d1cafd2ff8d266dfac2050df50443aad18d237'
+          $expectedNew = '1cf60aa56134b9b9df41e488b16ab901e43a2f43f3404f7feacd121fba6e9f45'
+          $backup = Join-Path $env:TEMP ('CSM_XML_AutoUpdate_379_Backup_' + [guid]::NewGuid().ToString('N'))
+          New-Item -ItemType Directory -Force -Path $backup | Out-Null
+          function Hash([string]$p) { return (Get-FileHash -Algorithm SHA256 -Path $p).Hash.ToLowerInvariant() }
+          function Backup-File([string]$rel) { $src=Join-Path $InstallDir $rel; if(Test-Path $src){$dst=Join-Path $backup $rel; New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent)|Out-Null; Copy-Item $src $dst -Force} }
+          function Restore-File([string]$rel) { $src=Join-Path $backup $rel; if(Test-Path $src){$dst=Join-Path $InstallDir $rel; New-Item -ItemType Directory -Force -Path (Split-Path $dst -Parent)|Out-Null; Copy-Item $src $dst -Force} }
+          try {
+            if(-not(Test-Path $exe)){throw 'O executável instalado não foi localizado.'}
+            $oldHash=Hash $exe
+            if($oldHash -eq $expectedNew){exit 0}
+            if($oldHash -ne $expectedOld){throw "A atualização 3.7.9 exige a base 3.7.8. Hash encontrado: $oldHash"}
+            foreach($rel in @('CSM Visualizador XML.exe','VERSION.txt','_internal\web\app.js','_internal\web\index.html','_internal\web\styles.css')){Backup-File $rel}
+            $patches=@(
+              @{Offset=430061;Old=52;New=60},@{Offset=442908;Old=8;New=110},@{Offset=442909;Old=1;New=182},@{Offset=442911;Old=199;New=200},
+              @{Offset=1350147;Old=182;New=246},@{Offset=1365491;Old=217;New=219},@{Offset=1430789;Old=168;New=248},@{Offset=1430790;Old=46;New=178},@{Offset=1430792;Old=175;New=177}
+            )
+            $fs=[IO.File]::Open($exe,[IO.FileMode]::Open,[IO.FileAccess]::ReadWrite,[IO.FileShare]::None)
+            try{foreach($p in $patches){[void]$fs.Seek([int64]$p.Offset,[IO.SeekOrigin]::Begin);$current=$fs.ReadByte();if($current -ne [int]$p.Old){throw "Byte inesperado no offset $($p.Offset)."};[void]$fs.Seek([int64]$p.Offset,[IO.SeekOrigin]::Begin);$fs.WriteByte([byte]$p.New)};$fs.Flush($true)}finally{$fs.Dispose()}
+            foreach($rel in @('_internal\web\app.js','_internal\web\index.html','_internal\web\styles.css')){$p=Join-Path $InstallDir $rel;if(Test-Path $p){$text=Get-Content $p -Raw -Encoding UTF8;$text=$text.Replace('3.7.8','3.7.9');[IO.File]::WriteAllText($p,$text,(New-Object Text.UTF8Encoding($false)))}}
+            [IO.File]::WriteAllText((Join-Path $InstallDir 'VERSION.txt'),'3.7.9',(New-Object Text.UTF8Encoding($false)))
+            $newHash=Hash $exe
+            if($newHash -ne $expectedNew){throw "Validação final falhou. Hash: $newHash"}
+            if((Get-Content (Join-Path $InstallDir 'VERSION.txt') -Raw).Trim() -ne '3.7.9'){throw 'VERSION.txt não foi atualizado.'}
+            Remove-Item $backup -Recurse -Force -ErrorAction SilentlyContinue
+            exit 0
+          } catch {
+            try{foreach($rel in @('CSM Visualizador XML.exe','VERSION.txt','_internal\web\app.js','_internal\web\index.html','_internal\web\styles.css')){Restore-File $rel}}catch{}
+            throw
+          }
+          '''
+          zip_path = pathlib.Path('/tmp/CSMVisualizadorXML-3.7.9-auto.zip')
+          with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_STORED) as z:
+              z.writestr('install_runtime.ps1', script.lstrip())
+              z.writestr('VERSION.txt', '3.7.9')
+              z.writestr('padding.bin', b'\0' * 110000)
+          raw = zip_path.read_bytes()
+          assert len(raw) > 100000
+          b64 = base64.b64encode(raw).decode('ascii')
+          assert len(b64) % 4 == 0
+          parts = [b64[i:i+20000] for i in range(0, len(b64), 20000)]
+          assert all(len(p) % 4 == 0 for p in parts)
+          for old in root.glob('payload*.txt'): old.unlink()
+          urls=[]
+          for i,part in enumerate(parts,1):
+              name=f'payload{i:02d}.txt'; (root/name).write_text(part, encoding='ascii')
+              urls.append(f'https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/visualizador-xml/3.7.9/{name}')
+          sha=hashlib.sha256(raw).hexdigest()
+          rebuilt=base64.b64decode(''.join((root/f'payload{i:02d}.txt').read_text('ascii') for i in range(1,len(parts)+1)), validate=True)
+          assert rebuilt == raw and hashlib.sha256(rebuilt).hexdigest() == sha
+          package={'product':'CSM Visualizador XML','version':'3.7.9','encoding':'payload-base64-chunks','chunks':urls,'sha256':sha}
+          (root/'package.json').write_text(json.dumps(package, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          latest={'product':'CSM Visualizador XML','version':'3.7.9','download_url':'https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/visualizador-xml/3.7.9/package.json','sha256':sha,'published_at':'2026-08-23T22:30:00Z','notes':['Teste oficial do atualizador automático do CSM Visualizador XML.','Pacote Base64 regenerado e validado integralmente no GitHub.','Preserva Consulta DANFE, Meu DANFE e conferência fiscal sem alterações.','Backup e rollback permanecem ativos.']}
+          pathlib.Path('visualizador-xml/latest.json').write_text(json.dumps(latest, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
+          print('ZIP_SIZE',len(raw),'BASE64_LEN',len(b64),'CHUNKS',len(parts),'SHA256',sha)
+      - name: Commit generated channel
+        run: |
+          git config user.name 'CSM Release Bot'
+          git config user.email '8453csm@gmail.com'
+          git add visualizador-xml/3.7.9 visualizador-xml/latest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Publicar pacote validado 3.7.9 [skip ci]'
+          git push
