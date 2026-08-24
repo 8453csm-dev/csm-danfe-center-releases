@@ -1,0 +1,71 @@
+am(,$compressed)
+  $gzip = New-Object IO.Compression.GZipStream($input,[IO.Compression.CompressionMode]::Decompress)
+  $reader = New-Object IO.StreamReader($gzip,[Text.Encoding]::UTF8)
+  $json = $reader.ReadToEnd()
+  $reader.Dispose(); $gzip.Dispose(); $input.Dispose()
+  $manifest = $json | ConvertFrom-Json
+
+  foreach ($name in @('app.js','index.html','styles.css')) {
+    $info = $manifest.$name
+    $target = Join-Path $webDir $name
+    if (-not (Test-Path -LiteralPath $target)) {
+      throw "Arquivo esperado não encontrado: $target"
+    }
+
+    $currentSha = Get-Sha256 $target
+    $newSha = ([string]$info.new_sha256).ToLowerInvariant()
+    $oldSha = ([string]$info.old_sha256).ToLowerInvariant()
+
+    if ($currentSha -eq $newSha) {
+      continue
+    }
+    if ($currentSha -ne $oldSha) {
+      throw "O arquivo $name não corresponde à base homologada 3.7.8. Atualização cancelada para proteger a instalação."
+    }
+
+    Copy-Item -LiteralPath $target -Destination (Join-Path $backupDir "_internal\web\$name") -Force
+
+    $text = [IO.File]::ReadAllText($target,[Text.Encoding]::UTF8)
+    foreach ($rep in $info.replacements) {
+      $oldText = Decode-Text ([string]$rep.old_b64)
+      $newText = Decode-Text ([string]$rep.new_b64)
+      if (-not $text.Contains($oldText)) {
+        throw "Trecho esperado para atualização de $name não foi localizado."
+      }
+      $text = $text.Replace($oldText,$newText)
+    }
+
+    [IO.File]::WriteAllText($target,$text,$utf8NoBom)
+    $writtenSha = Get-Sha256 $target
+    if ($writtenSha -ne $newSha) {
+      throw "Validação SHA-256 falhou após atualizar $name."
+    }
+  }
+
+  if (Test-Path -LiteralPath $versionPath) {
+    Copy-Item -LiteralPath $versionPath -Destination (Join-Path $backupDir 'VERSION.txt') -Force
+  }
+  [IO.File]::WriteAllText($versionPath,$Version,$utf8NoBom)
+
+  # Registro simples da atualização aplicada.
+  $marker = Join-Path $InstallDir 'UPDATE-3.8.0.ok'
+  [IO.File]::WriteAllText($marker,("Atualizado em " + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')),$utf8NoBom)
+
+  exit 0
+}
+catch {
+  try {
+    foreach ($name in @('app.js','index.html','styles.css')) {
+      $saved = Join-Path $backupDir "_internal\web\$name"
+      if (Test-Path -LiteralPath $saved) {
+        Copy-Item -LiteralPath $saved -Destination (Join-Path $webDir $name) -Force
+      }
+    }
+    $savedVersion = Join-Path $backupDir 'VERSION.txt'
+    if (Test-Path -LiteralPath $savedVersion) {
+      Copy-Item -LiteralPath $savedVersion -Destination $versionPath -Force
+    }
+  } catch {}
+  Write-Error $_
+  exit 1
+}
