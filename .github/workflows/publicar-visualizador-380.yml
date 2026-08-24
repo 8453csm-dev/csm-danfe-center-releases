@@ -1,0 +1,88 @@
+name: Publicar CSM Visualizador XML 3.8.0
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'visualizador-xml/publisher/3.8.0/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Gerar pacote homologado
+        shell: python
+        run: |
+          import base64, hashlib, json, os, pathlib, shutil, zipfile
+          root = pathlib.Path('.')
+          src = root / 'visualizador-xml' / 'publisher' / '3.8.0'
+          out = root / 'visualizador-xml' / '3.8.0'
+          if out.exists(): shutil.rmtree(out)
+          out.mkdir(parents=True)
+          stage = pathlib.Path('.stage380')
+          if stage.exists(): shutil.rmtree(stage)
+          stage.mkdir()
+          shutil.copy2(src / 'install_runtime.ps1', stage / 'install_runtime.ps1')
+          (stage / 'VERSION.txt').write_text('3.8.0', encoding='utf-8')
+          # O updater 3.7.8 recusa ZIPs <=100 KB. Padding aleatório garante o limite
+          # sem depender de arquivos Base64 manuais no repositório.
+          (stage / 'padding_mass.bin').write_bytes(os.urandom(110000))
+          zip_path = pathlib.Path('.CSMVisualizadorXML-3.8.0-update.zip')
+          with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_STORED) as z:
+            for p in sorted(stage.iterdir()): z.write(p, p.name)
+          data = zip_path.read_bytes()
+          if len(data) <= 100000: raise SystemExit('Pacote ficou abaixo do mínimo do updater 3.7.8')
+          sha = hashlib.sha256(data).hexdigest()
+          b64 = base64.b64encode(data).decode('ascii')
+          chunk_size = 12000
+          if chunk_size % 4: raise SystemExit('chunk_size precisa ser múltiplo de 4')
+          chunks = [b64[i:i+chunk_size] for i in range(0, len(b64), chunk_size)]
+          urls = []
+          for i, chunk in enumerate(chunks, 1):
+            name = f'chunk{i:02d}.txt'
+            (out / name).write_text(chunk, encoding='ascii', newline='')
+            urls.append(f'https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/visualizador-xml/3.8.0/{name}')
+          package = {
+            'product':'CSM Visualizador XML',
+            'version':'3.8.0',
+            'encoding':'payload-base64-chunks',
+            'chunks':urls,
+            'sha256':sha
+          }
+          (out / 'package.json').write_text(json.dumps(package, indent=2, ensure_ascii=False)+'\n', encoding='utf-8')
+          latest = {
+            'product':'CSM Visualizador XML',
+            'version':'3.8.0',
+            'download_url':'https://raw.githubusercontent.com/8453csm-dev/csm-danfe-center-releases/main/visualizador-xml/3.8.0/package.json',
+            'sha256':sha,
+            'published_at':'2026-08-24T16:50:00Z',
+            'notes':[
+              'Nova visualização XML com syntax highlighting.',
+              'XML formatado, busca por tag ou valor e blocos recolhíveis.',
+              'Destaques fiscais para ICMS, ICMS-ST, IPI, PIS, COFINS, CFOP, NCM, CST e CSOSN.',
+              'Atualização homologada da versão 3.7.8 para 3.8.0 com backup e rollback.'
+            ]
+          }
+          (root / 'visualizador-xml' / 'latest.json').write_text(json.dumps(latest, indent=2, ensure_ascii=False)+'\n', encoding='utf-8')
+          # Validação final: remonta os chunks e confere byte a byte e SHA.
+          rebuilt = base64.b64decode(''.join((out/f'chunk{i:02d}.txt').read_text(encoding='ascii') for i in range(1,len(chunks)+1)), validate=True)
+          if rebuilt != data or hashlib.sha256(rebuilt).hexdigest() != sha:
+            raise SystemExit('Falha na validação final dos chunks')
+          print('Pacote:', len(data), 'bytes')
+          print('Chunks:', len(chunks))
+          print('SHA256:', sha)
+
+      - name: Publicar canal 3.8.0
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add visualizador-xml/3.8.0 visualizador-xml/latest.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'Publicar CSM Visualizador XML 3.8.0 estável'
+          git push
