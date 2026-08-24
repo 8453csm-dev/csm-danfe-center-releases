@@ -1,0 +1,30 @@
+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
+'@
+
+function Get-Sha256([string]$Path) {
+  if (-not (Test-Path -LiteralPath $Path)) { return '' }
+  return (Get-FileHash -Algorithm SHA256 -LiteralPath $Path).Hash.ToLowerInvariant()
+}
+
+function Decode-Text([string]$B64) {
+  $bytes = [Convert]::FromBase64String($B64)
+  return [Text.Encoding]::UTF8.GetString($bytes)
+}
+
+$backupRoot = Join-Path $env:LOCALAPPDATA 'CSM Visualizador XML\UpdateBackups'
+$stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+$backupDir = Join-Path $backupRoot ("3.7.8-to-3.8.0-" + $stamp)
+$webDir = Join-Path $InstallDir '_internal\web'
+$versionPath = Join-Path $InstallDir 'VERSION.txt'
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+
+try {
+  if (-not (Test-Path -LiteralPath $webDir)) {
+    throw "Pasta web da instalação não encontrada: $webDir"
+  }
+
+  New-Item -ItemType Directory -Force -Path $backupDir | Out-Null
+  New-Item -ItemType Directory -Force -Path (Join-Path $backupDir '_internal\web') | Out-Null
+
+  $compressed = [Convert]::FromBase64String($ManifestGzipBase64.Trim())
+  $input = New-Object IO.MemoryStre
